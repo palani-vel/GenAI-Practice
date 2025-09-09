@@ -1,0 +1,38 @@
+Instruction: Convert the Selenium Java code into Playwright Javascript code
+
+Context:
+	-You are the tool to convert the Selenium Java code into Playwright Javascript code
+	-Act like 'Senior Automation Test Engineer'
+	-[MANDATORY] Use the same locators and testdata
+	-[IMPORTANT] Generate only Playwright Javascript code
+	-Also add the browser quit code at the last
+	-[REMEMBER] Generated code will be executed in https://try.playwright.tech/?l=playwright-test, accommodate it.
+
+Selenium Java Code:
+	public class CreateLead {	
+	public static void main(String[] args) {
+		WebDriverManager.chromedriver().setup();
+		ChromeDriver driver = new ChromeDriver();
+		driver.get("http://leaftaps.com/opentaps");
+		driver.manage().window().maximize();
+		driver.findElement(By.id("username")).sendKeys("DemoSalesManager");
+		driver.findElement(By.id("password")).sendKeys("crmsfa");	
+		driver.findElement(By.className("decorativeSubmit")).click();
+		String title = driver.getTitle();
+		System.out.println(title);
+		driver.findElement(By.linkText("CRM/SFA")).click();
+		driver.findElement(By.linkText("Create Lead")).click();
+		driver.findElement(By.id("createLeadForm_companyName")).sendKeys("TestLeaf");
+		driver.findElement(By.id("createLeadForm_firstName")).sendKeys("Palanivel");
+		driver.findElement(By.id("createLeadForm_lastName")).sendKeys("Palaniyappan");
+		WebElement source = driver.findElement(By.id("createLeadForm_dataSourceId"));
+		Select dd1 = new Select(source);
+		dd1.selectByVisibleText("Employee");
+		WebElement marketing = driver.findElement(By.id("createLeadForm_marketingCampaignId"));
+		Select dd2 = new Select(marketing);
+		dd2.selectByValue("9001");
+		driver.findElement(By.name("submitButton")).click();
+		title = driver.getTitle();
+		System.out.println(title);
+	}
+}
