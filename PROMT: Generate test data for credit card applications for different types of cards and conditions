@@ -1,0 +1,39 @@
+Instruction: Generate test data for credit card applications for different types of cards and conditions
+
+Context:
+	-Your job is to generate the test data for credit card applications
+	-You are a Senior Test Lead
+	-[MANDATORY] Test data should based on Australia
+	-[IMPORTANT] Card type should be used across all Australian banks.
+	-Rewards card type alone keep it in separate table
+	-
+
+Output Format:
+	Coulmn 1: Card Type, Column 2: Card Number , Column 3: Issuer, Column 4: CVV, Column 5: Expiry, Column 6: Use Case, Column 7: Card Status
+
+Example:
+	Visa | 4111 1111 1111 1111 | Visa | 123 | 12/34 | Standard approval | Active
+
+
+OpenAI Output:
+| Card Type  | Card Number         | Issuer            | CVV | Expiry | Use Case                   | Card Status |
+| ---------- | ------------------- | ----------------- | --- | ------ | -------------------------- | ----------- |
+| Visa       | 4111 1111 1111 1111 | ANZ               | 123 | 12/27  | Standard approval          | Active      |
+| Mastercard | 5500 0000 0000 0004 | Commonwealth Bank | 456 | 06/26  | High income applicant      | Active      |
+| Visa       | 4000 0566 5566 5556 | NAB               | 789 | 11/28  | Declined due to bad credit | Declined    |
+| Mastercard | 5555 5555 5555 4444 | Westpac           | 321 | 03/25  | Pending verification       | Pending     |
+| Visa       | 4012 8888 8888 1881 | ING               | 147 | 10/30  | Application under review   | In Review   |
+| Mastercard | 5105 1051 0510 5100 | Bankwest          | 852 | 07/26  | Low income applicant       | Rejected    |
+| Visa       | 4485 2756 3172 0003 | Suncorp           | 963 | 01/27  | Approved with conditions   | Conditional |
+| Mastercard | 5312 3456 7890 1234 | Macquarie Bank    | 258 | 05/29  | Temporary hold             | Suspended   |
+
+
+| Card Type          | Card Number         | Issuer            | CVV | Expiry | Use Case                        | Card Status |
+| ------------------ | ------------------- | ----------------- | --- | ------ | ------------------------------- | ----------- |
+| Visa Rewards       | 4532 9876 5432 1098 | ANZ               | 159 | 09/28  | Frequent flyer applicant        | Active      |
+| Mastercard Rewards | 5454 5454 5454 5454 | Westpac           | 951 | 04/27  | Premium rewards tier            | Active      |
+| Visa Rewards       | 4716 1234 5678 9012 | NAB               | 753 | 08/25  | Reward points redemption        | Active      |
+| Mastercard Rewards | 5200 8282 8282 8210 | Commonwealth Bank | 486 | 02/26  | Declined – Incomplete documents | Declined    |
+| Visa Rewards       | 4484 1000 0000 0007 | Macquarie Bank    | 624 | 11/29  | Under manual review             | In Review   |
+
+
