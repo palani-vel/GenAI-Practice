@@ -1,0 +1,54 @@
+curl --location 'https://api.groq.com/openai/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <GROQ KEY>' \
+--header 'Cookie: __cf_bm=KZQswwGy9dDvfzsohucADfTMnc1H_9pRYlgl35TjLLs-1757443580-1.0.1.1-gRGtqDzXlPEw_WqjXZE95XhhVoY0L98B5lX7h7c.xsgzumstAvyX76IIC9.1U3_pHhSOU0kXAjJDbZ_i6otjExkneYaep3B_atpfA6fN.Ww' \
+--data '{
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a Senior Automation Test Engineer. Your job is to convert Selenium Java code into Selenium Playwright JavaScript code."
+    },
+    {
+      "role": "user",
+      "content": "Convert the following Selenium Java code into Playwright JavaScript code. The output MUST:\n\n- Use the SAME LOCATORS and TEST DATA as in the Java code\n- Be written in plain Playwright JavaScript (not TypeScript)\n- Be structured to run correctly inside https://try.playwright.tech/?l=playwright-test\n- Include the browser quit/close command at the end\n- Output ONLY valid Playwright JavaScript code — no additional text or explanation\n\nSelenium Java Code:\n\npublic class CreateLead {\n\tpublic static void main(String[] args) {\n\t\tWebDriverManager.chromedriver().setup();\n\t\tChromeDriver driver = new ChromeDriver();\n\t\tdriver.get(\"http://leaftaps.com/opentaps\");\n\t\tdriver.manage().window().maximize();\n\t\tdriver.findElement(By.id(\"username\")).sendKeys(\"DemoSalesManager\");\n\t\tdriver.findElement(By.id(\"password\")).sendKeys(\"crmsfa\");\n\t\tdriver.findElement(By.className(\"decorativeSubmit\")).click();\n\t\tString title = driver.getTitle();\n\t\tSystem.out.println(title);\n\t\tdriver.findElement(By.linkText(\"CRM/SFA\")).click();\n\t\tdriver.findElement(By.linkText(\"Create Lead\")).click();\n\t\tdriver.findElement(By.id(\"createLeadForm_companyName\")).sendKeys(\"TestLeaf\");\n\t\tdriver.findElement(By.id(\"createLeadForm_firstName\")).sendKeys(\"Palanivel\");\n\t\tdriver.findElement(By.id(\"createLeadForm_lastName\")).sendKeys(\"Palaniyappan\");\n\t\tWebElement source = driver.findElement(By.id(\"createLeadForm_dataSourceId\"));\n\t\tSelect dd1 = new Select(source);\n\t\tdd1.selectByVisibleText(\"Employee\");\n\t\tWebElement marketing = driver.findElement(By.id(\"createLeadForm_marketingCampaignId\"));\n\t\tSelect dd2 = new Select(marketing);\n\t\tdd2.selectByValue(\"9001\");\n\t\tdriver.findElement(By.name(\"submitButton\")).click();\n\t\ttitle = driver.getTitle();\n\t\tSystem.out.println(title);\n\t}\n}"
+    }
+  ],
+  "model": "openai/gpt-oss-120b",
+  "temperature": 0.1
+}
+
+
+RESPONSE:
+{
+    "id": "chatcmpl-9273244c-ff3f-4649-becb-2a65f5f8de8b",
+    "object": "chat.completion",
+    "created": 1757443580,
+    "model": "openai/gpt-oss-120b",
+    "choices": [
+        {
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "```javascript\nconst { test } = require('@playwright/test');\nconst { chromium } = require('playwright');\n\ntest('Create Lead', async () => {\n  const browser = await chromium.launch({ headless: false });\n  const context = await browser.newContext();\n  const page = await context.newPage();\n\n  await page.goto('http://leaftaps.com/opentaps');\n  await page.setViewportSize({ width: 1920, height: 1080 });\n\n  await page.fill('#username', 'DemoSalesManager');\n  await page.fill('#password', 'crmsfa');\n  await page.click('.decorativeSubmit');\n\n  console.log(await page.title());\n\n  await page.click('text=CRM/SFA');\n  await page.click('text=Create Lead');\n\n  await page.fill('#createLeadForm_companyName', 'TestLeaf');\n  await page.fill('#createLeadForm_firstName', 'Palanivel');\n  await page.fill('#createLeadForm_lastName', 'Palaniyappan');\n\n  await page.selectOption('#createLeadForm_dataSourceId', { label: 'Employee' });\n  await page.selectOption('#createLeadForm_marketingCampaignId', '9001');\n\n  await page.click('[name=\"submitButton\"]');\n\n  console.log(await page.title());\n\n  await browser.close();\n});\n```",
+                "reasoning": "We need to output Playwright JavaScript code that replicates the Selenium steps. Use same locators and test data. Must be plain Playwright JavaScript (not TypeScript). Must be structured to run correctly inside https://try.playwright.tech/?l=playwright-test. That environment uses Playwright Test runner. So we need to write a test file with test('...', async ({ page }) => { ... }). Also need to include browser quit/close command at the end. In Playwright Test, the browser is managed automatically, but we can close page or context. However requirement: include browser quit/close command at the end. In Playwright Test, we can use await page.close(); or maybe use browser.close() if we launch manually. But inside test runner, we don't have direct browser object. Could launch manually using playwright.chromium.launch(). But they said structured to run correctly inside try.playwright.tech with playwright-test. That environment expects test file using test function. We can still launch a browser manually inside test, but then we need to close it. Simpler: use test('Create Lead', async ({ }) => { const { chromium } = require('playwright'); const browser = await chromium.launch({ headless: false }); const context = await browser.newContext(); const page = await context.newPage(); ... await browser.close(); }); That would be plain JavaScript. However the test runner expects the test function signature with fixtures. Using manual launch is okay.\n\nBut they said \"structured to run correctly inside https://try.playwright.tech/?l=playwright-test\". That site loads Playwright Test environment where you can write test files. It supports both test fixtures and manual launch. I think using test('...', async () => { ... }) is fine.\n\nWe need to replicate steps:\n\n- navigate to http://leaftaps.com/opentaps\n- maximize window: in Playwright we can set viewport size or use page.setViewportSize. Not necessary but we can ignore.\n- fill username id \"username\" with \"DemoSalesManager\"\n- fill password id \"password\" with \"crmsfa\"\n- click className \"decorativeSubmit\"\n- get title and console.log\n- click link text \"CRM/SFA\": In Playwright we can use page.click('text=CRM/SFA')\n- click link text \"Create Lead\": page.click('text=Create Lead')\n- fill company name id \"createLeadForm_companyName\" with \"TestLeaf\"\n- fill first name id \"createLeadForm_firstName\" with \"Palanivel\"\n- fill last name id \"createLeadForm_lastName\" with \"Palaniyappan\"\n- select dropdown id \"createLeadForm_dataSourceId\" select by visible text \"Employee\": page.selectOption('#createLeadForm_dataSourceId', { label: 'Employee' })\n- select dropdown id \"createLeadForm_marketingCampaignId\" select by value \"9001\": page.selectOption('#createLeadForm_marketingCampaignId', '9001')\n- click button name \"submitButton\": page.click('[name=\"submitButton\"]')\n- get title again and console.log\n- close browser\n\nWe need to use same locators: id, className, linkText, name. Use CSS selectors accordingly.\n\nImplementation:\n\nconst { test, expect } = require('@playwright/test');\n\ntest('Create Lead', async () => {\n  const { chromium } = require('playwright');\n  const browser = await chromium.launch({ headless: false });\n  const context = await browser.newContext();\n  const page = await context.newPage();\n\n  await page.goto('http://leaftaps.com/opentaps');\n  await page.setViewportSize({ width: 1920, height: 1080 });\n\n  await page.fill('#username', 'DemoSalesManager');\n  await page.fill('#password', 'crmsfa');\n  await page.click('.decorativeSubmit');\n\n  console.log(await page.title());\n\n  await page.click('text=CRM/SFA');\n  await page.click('text=Create Lead');\n\n  await page.fill('#createLeadForm_companyName', 'TestLeaf');\n  await page.fill('#createLeadForm_firstName', 'Palanivel');\n  await page.fill('#createLeadForm_lastName', 'Palaniyappan');\n\n  await page.selectOption('#createLeadForm_dataSourceId', { label: 'Employee' });\n  await page.selectOption('#createLeadForm_marketingCampaignId', '9001');\n\n  await page.click('[name=\"submitButton\"]');\n\n  console.log(await page.title());\n\n  await browser.close();\n});\n\nMake sure to use plain JavaScript, not async arrow with test fixture. The test function signature can be async () => {}. In Playwright Test, you can import test from '@playwright/test'. The test runner will handle. The manual launch inside test may cause nested browsers but okay.\n\nAlternatively, we could use test('Create Lead', async ({ page }) => { ... }) and then at end page.close(); but they ask for browser quit/close command. page.close() is fine. But they said \"browser quit/close command\". So using browser.close() is more explicit.\n\nThus final code as above.\n\nMake sure no extra text."
+            },
+            "logprobs": null,
+            "finish_reason": "stop"
+        }
+    ],
+    "usage": {
+        "queue_time": 0.048586666,
+        "prompt_tokens": 508,
+        "prompt_time": 0.019550953,
+        "completion_tokens": 1350,
+        "completion_time": 2.695006239,
+        "total_tokens": 1858,
+        "total_time": 2.714557192
+    },
+    "usage_breakdown": null,
+    "system_fingerprint": "fp_ed9190d8b7",
+    "x_groq": {
+        "id": "req_01k4qwsp0mf22ttzmcze09phym"
+    },
+    "service_tier": "on_demand"
+}
